@@ -2,6 +2,10 @@ import bottle
 import os
 import random
 
+EMPTY = u'empty'
+FOOD = u'food'
+BODY = u'body'
+HEAD = u'head'
 
 @bottle.route('/static/<path:path>')
 def static(path):
@@ -30,9 +34,35 @@ def start():
     }
 
 
+def generate_board(data):
+    # Generate width x height board
+    # All cells begin with a state of 'empty'
+    board = [
+        [EMPTY for _ in range(data['width'])]
+        for _ in range(data['height'])
+    ]
+
+    # Populate board with food
+    for food in data['food']:
+        board[food[0]][food[1]] = FOOD
+
+    for snake in data['snakes']:
+        coords = snake['coords']
+
+        # Set the coordinates of the head
+        head = coords[0]
+        board[head[0]][head[1]] = HEAD
+
+        # Set the coordinates of the body
+        for coord in coords[1:]:
+            board[coord[0]][coord[1]] = BODY
+
+    return board
+
 @bottle.post('/move')
 def move():
     data = bottle.request.json
+    board = generate_board(data)
 
     # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
