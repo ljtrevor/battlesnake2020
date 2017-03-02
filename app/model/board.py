@@ -121,6 +121,7 @@ class Board:
         """
         murgatroid = self.get_murgatroid()
 
+        # If point is a snake head of a smaller snake consider it a safe space
         for snake in self.snakes:
             if snake.get_head() == point:
                 if len(murgatroid.coords) > len(snake.coords):
