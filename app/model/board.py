@@ -119,7 +119,13 @@ class Board:
         Returns:
             bool: True if safe cell. False otherwise.
         """
-        # @TODO Return true if space contains a smaller snakes head
+        murgatroid = self.get_murgatroid()
+
+        for snake in self.snakes:
+            if snake.get_head() == point:
+                if len(murgatroid.coords) > len(snake.coords):
+                    return True
+
         return self.board[point.x][point.x] in self.SAFE
 
 
