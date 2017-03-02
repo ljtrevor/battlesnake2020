@@ -7,6 +7,7 @@ import sys
 from model.point import Point
 from model.snake import Snake
 from model.board import Board
+from controller.murgatroid_controller import MurgatroidController
 
 EMPTY = u'empty'
 FOOD = u'food'
@@ -170,6 +171,8 @@ def get_possible_directions(murgatroid, board, bounds):
 def move():
     data = bottle.request.json
     board = Board.from_json(data)
+    murgatroid_controller = MurgatroidController(board)
+
 
     width = board.width
     height = board.height
