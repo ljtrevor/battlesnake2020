@@ -4,6 +4,9 @@ import os
 import random
 import sys
 
+from model.point import Point
+from model.snake import Snake
+from model.board import Board
 
 EMPTY = u'empty'
 FOOD = u'food'
@@ -163,44 +166,13 @@ def get_possible_directions(murgatroid, board, bounds):
     return directions
 
 
-def generate_board(data):
-    # Generate width x height board
-    # All cells begin with a state of 'empty'
-    board = [
-        [EMPTY for _ in range(data['width'])]
-        for _ in range(data['height'])
-    ]
-
-    # Populate board with food
-    for food in data['food']:
-        board[food[0]][food[1]] = FOOD
-
-    for snake in data['snakes']:
-        coords = snake['coords']
-
-        # Mark our own snek as Murgatroid
-        # TODO: Un-hard-code our own name
-        if snake['name'] == u'murgatroid':
-            for coord in coords:
-                board[coord[0]][coord[1]] = MURGATROID
-        else:
-            # Set the coordinates of the head
-            head = coords[0]
-            board[head[0]][head[1]] = HEAD
-
-            # Set the coordinates of the body
-            for coord in coords[1:]:
-                board[coord[0]][coord[1]] = BODY
-
-    return board
-
 @bottle.post('/move')
 def move():
     data = bottle.request.json
-    board = generate_board(data)
+    board = Board.from_json(data)
 
-    width = data['width']
-    height = data['height']
+    width = board.width
+    height = board.height
 
     bounds = {
         "up": 1,
@@ -211,7 +183,7 @@ def move():
 
     murgatroid = [s for s in data['snakes'] if s['name'] == 'murgatroid'][0]
 
-    directions = get_possible_directions(murgatroid, board, bounds)
+    directions = get_possible_directions(murgatroid, board.board, bounds)
     if not directions:
         bounds = {
             "up": 0,
@@ -220,12 +192,12 @@ def move():
             "left": 0,
         }
 
-        directions = get_possible_directions(murgatroid, board, bounds)
+        directions = get_possible_directions(murgatroid, board.board, bounds)
         if not directions:
             # Commit suicide honorably so as not to give any victories to
             # the other inferior snakes!
             return json.dumps({
-                'move': seppuku(murgatroid, board),
+                'move': seppuku(murgatroid, board.board),
                 'taunt': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
             })
 
