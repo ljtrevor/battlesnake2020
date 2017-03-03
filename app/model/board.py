@@ -124,6 +124,10 @@ class Board(object):
         """
         murgatroid = self.get_murgatroid()
 
+        # If outside of bounds, return False
+        if point.x < 0 or point.x > self.width - 1 or point.y < 0 or point.y > self.height - 1:
+            return False
+
         # If using safe bounds and outside of safe bounds. Return false.
         if self.use_safe_bounds:
             x_range = self.safe_bounds_ranges['x']
