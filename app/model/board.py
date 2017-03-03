@@ -130,10 +130,14 @@ class Board(object):
 
         # If using safe bounds and outside of safe bounds. Return false.
         if self.use_safe_bounds:
-            x_range = self.safe_bounds_ranges['x']
-            y_range = self.safe_bounds_ranges['y']
-            if point.x not in range(x_range[0], x_range[1]) and point.y not in \
-                    range(y_range[0], y_range[1]):
+            x_min, x_max = self.safe_bounds_ranges['x']
+            y_min, y_max = self.safe_bounds_ranges['y']
+            if any([
+                point.x > x_max,
+                point.x < x_min,
+                point.y > y_max,
+                point.y < y_min,
+            ]):
                 return False
 
         # If point is a snake head of a smaller snake consider it a safe space
