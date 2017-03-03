@@ -93,7 +93,12 @@ class MurgatroidController(object):
         elif delta.x == -1 and delta.y == 0:
             return Direction.LEFT
         else:
-            # We shouldn't ever be in a case where the second
-            # coord isn't next to the head, but better safe
-            # than sorry
-            return random.choice(Direction.directions)
+            # If somehow we're trapped on the first turn where we just have our
+            # head and no other spaces with snake coordinates, just go in a
+            # random direction
+            return random.choice([
+                Direction.UP,
+                Direction.RIGHT,
+                Direction.DOWN,
+                Direction.LEFT,
+            ])
