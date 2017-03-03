@@ -17,7 +17,7 @@ class MurgatroidController(object):
                 directions (Direction[])
         """
         directions = []
-        murgatroid_head = self.murgatroid.get_head()
+        murgatroid_head = self.murgatroid.head
 
         # Up
         if self.board.is_safe(murgatroid_head.x, murgatroid_head.y - 1):
