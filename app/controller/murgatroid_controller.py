@@ -2,6 +2,7 @@ from model.direction import Direction
 from model.point import Point
 
 import random
+import sys
 
 
 class MurgatroidController(object):
@@ -102,3 +103,40 @@ class MurgatroidController(object):
                 Direction.DOWN,
                 Direction.LEFT,
             ])
+
+    def move_edge(self):
+        murgatroid_head = self.murgatroid.head
+
+        x_min, x_max = self.board.safe_bounds_ranges['x']
+        y_min, y_max = self.board.safe_bounds_ranges['y']
+
+        # If not on an edge, start moving towards one
+        if not any(
+                [murgatroid_head.x in (x_min, x_max),
+                 murgatroid_head.y in (y_min, y_max)]):
+            edge_distances = [
+                (Direction.UP, murgatroid_head.y - y_min),
+                (Direction.RIGHT, x_max - murgatroid_head.x),
+                (Direction.DOWN, y_max - murgatroid_head.y),
+                (Direction.LEFT, murgatroid_head.x - x_min)
+            ]
+            dist_min = sys.maxint
+
+            # Find the closest edge's index
+            for i, d in enumerate(edge_distances):
+                if d[1] < dist_min:
+                    dist_min = edge_distances[i][1]
+                    index = i
+
+            direction = edge_distances[index][0]
+
+        elif murgatroid_head.y == y_min and x_min <= murgatroid_head.x <= x_max - 1:
+            direction = Direction.RIGHT
+        elif murgatroid_head.x == x_max and y_min <= murgatroid_head.y <= y_max - 1:
+            direction = Direction.DOWN
+        elif murgatroid_head.y == y_max and x_min + 1 <= murgatroid_head.x <= x_max:
+            direction = Direction.LEFT
+        else:
+            direction = Direction.UP
+
+        return direction

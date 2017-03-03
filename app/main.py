@@ -150,7 +150,7 @@ def move():
                 'taunt': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
             })
 
-    edge_direction = move_edge(murgatroid, bounds)
+    edge_direction = murgatroid_controller.move_edge()
 
     food = [x for x, food in directions if food]
 
