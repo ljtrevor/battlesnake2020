@@ -15,6 +15,16 @@ class Point(object):
     def get_down_point(self):
         return Point(self.x, self.y + 1)
 
+    def increment(self, direction):
+        if direction == direction.UP:
+            return self.get_up_point()
+        elif direction == direction.DOWN:
+            return self.get_down_point()
+        elif direction == direction.LEFT:
+            return self.get_left_point()
+        elif direction == direction.RIGHT:
+            return self.get_right_point()
+
     def __repr__(self):
         return '<Point x=%s, y=%s>' % (self.x, self.y)
 
