@@ -75,7 +75,7 @@ def move():
 
     if food_directions:
         return json.dumps({
-            'move': random.choice(food),
+            'move': random.choice(food_directions),
             'taunt': 'Sssssssssssssaucy'
         })
     else:
