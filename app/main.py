@@ -56,15 +56,12 @@ def move():
 
     directions_map = murgatroid_controller.get_possible_directions()
     if not directions_map:
-        murgatroid_controller.use_safe_bounds = False
-        directions_map = murgatroid_controller.get_possible_directions()
-        if not directions_map:
-            # Commit suicide honorably so as not to give any victories to
-            # the other inferior snakes!
-            return json.dumps({
-                'move': murgatroid_controller.seppuku(),
-                'taunt': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
-            })
+        # Commit suicide honorably so as not to give any victories to
+        # the other inferior snakes!
+        return json.dumps({
+            'move': murgatroid_controller.seppuku(),
+            'taunt': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
+        })
 
     edge_direction = murgatroid_controller.move_edge()
 
