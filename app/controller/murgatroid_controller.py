@@ -93,7 +93,6 @@ class MurgatroidController(object):
                 directions (Direction[])
         """
         directions = []
-        murgatroid_head = self.murgatroid.head
 
         # Up
         if self.is_safe(point.get_up_point()):
