@@ -11,7 +11,7 @@ SNAKE_BODY = u'snake_body'
 SAFE_STATES = [FOOD, EMPTY]
 
 class Board(object):
-    def __init__(self, game_id, height, width, turn, snakes, food):
+    def __init__(self, game_id, height, width, turn, snakes, food_items):
         """Creates a Board instance
             Args:
                 game_id (int)
