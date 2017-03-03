@@ -164,8 +164,8 @@ class MurgatroidController(object):
     def move_edge(self):
         murgatroid_head = self.murgatroid.head
 
-        x_min, x_max = self.board.safe_bounds_ranges['x']
-        y_min, y_max = self.board.safe_bounds_ranges['y']
+        x_min, x_max = self.safe_bounds_ranges['x']
+        y_min, y_max = self.safe_bounds_ranges['y']
 
         # If not on an edge, start moving towards one
         if not any(
