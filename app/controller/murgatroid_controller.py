@@ -1,6 +1,7 @@
 from model.direction import Direction
 
-class MurgatroidController:
+
+class MurgatroidController(object):
     def __init__(self, board):
         """Creates a controller of the murgatroid variety
             Args:
