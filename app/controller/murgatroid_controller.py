@@ -15,6 +15,10 @@ class MurgatroidController(object):
         self.board = board
         self.murgatroid = board.get_murgatroid()
         self.use_safe_bounds = True
+        self.safe_bounds_ranges = {
+            'x': [1, board.width - 2],
+            'y': [1, board.height - 2]
+        }
 
     def get_adjacent_points(self, point, state=None):
         adjacent_points = [
@@ -77,19 +81,19 @@ class MurgatroidController(object):
         murgatroid_head = self.murgatroid.head
 
         # Up
-        if self.board.is_safe(point.get_up_point()):
+        if self.is_safe(point.get_up_point()):
             directions.append(Direction.UP)
 
         # Down
-        if self.board.is_safe(point.get_down_point()):
+        if self.is_safe(point.get_down_point()):
             directions.append(Direction.DOWN)
 
         # Left
-        if self.board.is_safe(point.get_left_point()):
+        if self.is_safe(point.get_left_point()):
             directions.append(Direction.LEFT)
 
         # Right
-        if self.board.is_safe(point.get_right_point()):
+        if self.is_safe(point.get_right_point()):
             directions.append(Direction.RIGHT)
 
         return directions
@@ -103,10 +107,10 @@ class MurgatroidController(object):
         Returns:
             bool: True if safe cell. False otherwise.
         """
-        x_min, x_max = self.safe_bound_ranges['x'] if self.use_safe_bounds \
-                else 0, self.width - 1
-        y_min, y_max = self.safe_bound_ranges['y'] if self.use_safe_bounds \
-                else 0, self.height - 1
+        x_min, x_max = self.safe_bounds_ranges['x'] if self.use_safe_bounds \
+                else 0, self.board.width - 1
+        y_min, y_max = self.safe_bounds_ranges['y'] if self.use_safe_bounds \
+                else 0, self.board.height - 1
 
         # If outside of bounds, return False
         if any([
@@ -126,7 +130,7 @@ class MurgatroidController(object):
             if self.board.get_snake(head).size > self.murgatroid.size:
                 return False
 
-        return self.board.board[point.x][point.y] in SAFE_STATES
+        return self.board.board[point.x][point.y] in board.SAFE_STATES
 
     def seppuku(self):
         target = Point(self.murgatroid.coords[1].x, self.murgatroid.coords[1].y)

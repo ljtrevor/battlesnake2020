@@ -28,10 +28,6 @@ class Board(object):
         self.turn = turn
         self.snakes = snakes
         self.food_items = food_items
-        self.safe_bounds_ranges = {
-            'x': [1, width - 2],
-            'y': [1, height - 2]
-        }
 
         # Populate board
         self.board = [
