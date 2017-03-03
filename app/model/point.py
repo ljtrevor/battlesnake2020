@@ -1,3 +1,5 @@
+from .direction import Direction
+
 class Point(object):
     def __init__(self, x, y):
         self.x = x
@@ -16,13 +18,13 @@ class Point(object):
         return Point(self.x, self.y + 1)
 
     def increment(self, direction):
-        if direction == direction.UP:
+        if direction == Direction.UP:
             return self.get_up_point()
-        elif direction == direction.DOWN:
+        elif direction == Direction.DOWN:
             return self.get_down_point()
-        elif direction == direction.LEFT:
+        elif direction == Direction.LEFT:
             return self.get_left_point()
-        elif direction == direction.RIGHT:
+        elif direction == Direction.RIGHT:
             return self.get_right_point()
 
     def __repr__(self):
