@@ -49,35 +49,40 @@ class MurgatroidController(object):
         # Get safe directions from current point
         cur_safe_directions = self.get_safe_directions(murgatroid_head)
 
-        direction_weights = {}
+        direction_map = {}
         for direction in cur_safe_directions:
             if direction == Direction.UP:
                 num_safe_up_directions = \
                     len(self.get_safe_directions(murgatroid_head.get_up_point()))
-                direction_weights[Direction.UP] = num_safe_up_directions
+                direction_map[Direction.UP] = {'weight': num_safe_up_directions}
 
             elif direction == Direction.DOWN:
                 num_safe_down_directions = \
                     len(self.get_safe_directions(murgatroid_head.get_down_point()))
-                direction_weights[Direction.DOWN] = num_safe_down_directions
+                direction_map[Direction.DOWN] = {'weight': num_safe_down_directions}
 
             elif direction == Direction.LEFT:
                 num_safe_left_directions = \
                     len(self.get_safe_directions(murgatroid_head.get_left_point()))
-                direction_weights[Direction.LEFT] = num_safe_left_directions
+                direction_map[Direction.LEFT] = {'weight': num_safe_left_directions}
 
             elif direction == Direction.RIGHT:
                 num_safe_right_directions = \
                     len(self.get_safe_directions(murgatroid_head.get_right_point()))
-                direction_weights[Direction.RIGHT] = num_safe_right_directions
+                direction_map[Direction.RIGHT] = {'weight': num_safe_right_directions}
 
-        if not direction_weights and self.use_safe_bounds:
+        for direction in direction_map.iterkeys():
+            point = murgatroid_head.increment(direction)
+            direction_map[direction]['state'] = self.board.board[point.x][point.y]
+
+        if not direction_map and self.use_safe_bounds:
             # Expand the bounds to the 'outer ring' if we don't have any possible
             # directions after one pass
             self.use_safe_bounds = False
-            direction_weights = self.get_possible_directions()
+            direction_map = self.get_possible_directions()
 
-        return direction_weights
+        print direction_map
+        return direction_map
 
     def get_safe_directions(self, point):
         """Returns an array of safe directions from the provided point

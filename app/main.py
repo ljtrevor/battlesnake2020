@@ -7,6 +7,7 @@ import sys
 from model.point import Point
 from model.snake import Snake
 from model.board import Board
+from model.board import FOOD
 from controller.murgatroid_controller import MurgatroidController
 
 EMPTY = u'empty'
@@ -65,17 +66,21 @@ def move():
 
     edge_direction = murgatroid_controller.move_edge()
 
-    food = [x for x, food in directions if food]
+    # WIP
+    food_directions = [
+        direction
+        for direction, data in directions_map.iteritems()
+        if data['state'] == FOOD
+    ]
 
-    if food:
+    if food_directions:
         return json.dumps({
             'move': random.choice(food),
             'taunt': 'Sssssssssssssaucy'
         })
     else:
-        directions = [x for x, _ in directions]
         return json.dumps({
-            'move': edge_direction if edge_direction in directions else random.choice(directions),
+            'move': edge_direction if edge_direction in directions_map else random.choice(directions_map.keys()),
             'taunt': 'MURGATROIIIIIID'
         })
 
