@@ -33,7 +33,7 @@ class MurgatroidController(object):
         matching_points = [
             adj
             for adj in adjacent_points
-            if self.board.board[adj.x][adj.y] == state
+            if self.in_absolute_bounds(adj) and self.board.board[adj.x][adj.y] == state
         ]
         return matching_points
 
@@ -197,3 +197,6 @@ class MurgatroidController(object):
             direction = Direction.UP
 
         return direction
+
+    def in_absolute_bounds(self, point):
+        return 0 <= point.x < self.board.width and  0 <= point.y < self.board.height
