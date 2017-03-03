@@ -3,15 +3,14 @@ import pprint
 from snake import Snake
 from point import Point
 
-class Board:
-    MURGATROID = u'murgatroid'
-    EMPTY = u'empty'
-    FOOD = u'food'
-    HEAD = u'head'
-    SNAKE_HEAD = u'snake_head'
-    SNAKE_BODY = u'snake_body'
-    SAFE = [FOOD, EMPTY]
+MURGATROID = u'murgatroid'
+EMPTY = u'empty'
+FOOD = u'food'
+SNAKE_HEAD = u'snake_head'
+SNAKE_BODY = u'snake_body'
+SAFE_STATES = [FOOD, EMPTY]
 
+class Board(object):
     def __init__(self, game_id, height, width, turn, snakes, food):
         """Creates a Board instance
             Args:
@@ -20,40 +19,40 @@ class Board:
                 width (int)
                 turn (int)
                 snakes (Snake[])
-                food (Food[])
+                food_items (Food[])
         """
         self.game_id = game_id
         self.height = height
         self.width = width
         self.turn = turn
         self.snakes = snakes
-        self.food = food
+        self.food_items = food_items
 
         # Populate board
         self.board = [
-            [self.EMPTY for _ in range(width)]
+            [EMPTY for _ in range(width)]
             for _ in range(height)
         ]
 
         # Populate food
-        for foodItem in food:
-            self.board[foodItem.x][foodItem.y] = self.FOOD
+        for food in food_items:
+            self.board[food.x][food.y] = FOOD
 
         # Populate snakes
         for snake in snakes:
             coords = snake.coords
 
-            if snake.name == self.MURGATROID:
+            if snake.name == MURGATROID:
                 for coord in coords:
-                    self.board[coord.x][coord.y] = self.MURGATROID
+                    self.board[coord.x][coord.y] = MURGATROID
             else:
                 # Set the coordinates of the head
                 head = coords[0]
-                self.board[head.x][head.y] = self.SNAKE_HEAD
+                self.board[head.x][head.y] = SNAKE_HEAD
 
             # Set the coordinates of the body
             for coord in coords[1:]:
-                self.board[coord.x][coord.y] = self.SNAKE_BODY
+                self.board[coord.x][coord.y] = SNAKE_BODY
 
     @staticmethod
     def from_json(json):
@@ -69,9 +68,9 @@ class Board:
         for snake in json['snakes']:
             snakes.append(Snake.from_json(snake))
 
-        foods = []
+        food_items = []
         for food in json['food']:
-            foods.append(Point(food[0], food[1]))
+            food_items.append(Point(food[0], food[1]))
 
         return Board(
             json['game_id'],
@@ -79,7 +78,7 @@ class Board:
             json['width'],
             json['turn'],
             snakes,
-            foods
+            food_items
         )
 
     def get_murgatroid(self):
@@ -88,11 +87,9 @@ class Board:
 
         Returns:
             Snake|None: Returns murgatroid if can be found. None otherwise.
-
-
         """
         for snake in self.snakes:
-            if snake.name == self.MURGATROID:
+            if snake.name == MURGATROID:
                 return snake
 
         return None
@@ -105,7 +102,7 @@ class Board:
         """
         for snake in self.snakes:
             for coord in snake.coords:
-                if coord.x == point.x and coord.y == point.y:
+                if coord == point:
                     return snake
 
         return None
@@ -123,11 +120,7 @@ class Board:
 
         # If point is a snake head of a smaller snake consider it a safe space
         for snake in self.snakes:
-            if snake.get_head() == point:
-                if len(murgatroid.coords) > len(snake.coords):
-                    return True
+            if snake.head == point and murgatroid.size > snake.size:
+                return True
 
-        return self.board[point.x][point.x] in self.SAFE
-
-
-
+        return self.board[point.x][point.y] in SAFE_STATES

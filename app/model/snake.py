@@ -1,20 +1,25 @@
 from point import Point
 
-class Snake:
-    def __init__(self, coords, health_points, id, name, taunt):
+
+class Snake(object):
+    def __init__(self, coords, health_points, snake_id, name, taunt):
         """Creates a Snake instance
             Args:
                 coords (Point[]) Array of Point objects'
                 health_points (int) Snake health_points
-                id (int) Snake ID
+                snake_id (int) Snake id
                 name (str) Snake name
                 taunt (str) Snake taunt
         """
         self.coords = coords
         self.health_points = health_points
-        self.id = id
+        self.snake_id = snake_id
         self.name = name
         self.taunt = taunt
+
+    @property
+    def size(self):
+        return len(self.coords)
 
     @staticmethod
     def from_json(json):
@@ -29,12 +34,11 @@ class Snake:
             json['taunt']
         )
 
-
-    def get_head(self):
+    @property
+    def head(self):
         """Returns the Point of the snake head location
 
             Returns:
                 Point: Snake head Point
         """
         return Point(self.coords[0].x, self.coords[0].y)
-
