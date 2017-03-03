@@ -41,4 +41,4 @@ class Snake(object):
             Returns:
                 Point: Snake head Point
         """
-        return Point(self.coords[0].x, self.coords[0].y)
+        return self.coords[0]

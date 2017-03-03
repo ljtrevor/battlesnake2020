@@ -137,7 +137,7 @@ def move():
     data = bottle.request.json
     board = Board.from_json(data)
     murgatroid_controller = MurgatroidController(board)
-
+    murgatroid_controller.get_possible_directions()
 
     width = board.width
     height = board.height

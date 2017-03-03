@@ -1,4 +1,7 @@
 from model.direction import Direction
+from model.point import Point
+
+import random
 
 
 class MurgatroidController(object):
@@ -10,29 +13,63 @@ class MurgatroidController(object):
         self.board = board
         self.murgatroid = board.get_murgatroid()
 
-    def get_possible_directions(self, point):
-        """Returns an array of possible directions from murgatroid
+    def get_possible_directions(self):
+        """Returns an array of safe directions from murgatroid's current location
 
+            Returns:
+                directions (Direction[])
+
+        """
+        murgatroid_head = self.murgatroid.head
+
+        # Get safe directions from current point
+        cur_safe_directions = self.get_safe_directions(murgatroid_head)
+
+        look_ahead_directions_map = {}
+        for direction in cur_safe_directions:
+            if direction == Direction.UP:
+                num_safe_up_directions = \
+                    len(self.get_safe_directions(murgatroid_head.get_up_point()))
+                look_ahead_directions_map[Direction.UP] = num_safe_up_directions
+            elif direction == Direction.DOWN:
+                num_safe_down_directions = \
+                    len(self.get_safe_directions(murgatroid_head.get_down_point()))
+                look_ahead_directions_map[Direction.DOWN] = num_safe_down_directions
+            elif direction == Direction.LEFT:
+                num_safe_left_directions = \
+                    len(self.get_safe_directions(murgatroid_head.get_left_point()))
+                look_ahead_directions_map[Direction.LEFT] = num_safe_left_directions
+            elif direction == Direction.RIGHT:
+                num_safe_right_directions = \
+                    len(self.get_safe_directions(murgatroid_head.get_right_point()))
+                look_ahead_directions_map[Direction.RIGHT] = num_safe_right_directions
+        print look_ahead_directions_map
+
+    def get_safe_directions(self, point):
+        """Returns an array of safe directions from the provided point
             Args:
+                point (Point)
+
+            Returns:
                 directions (Direction[])
         """
         directions = []
         murgatroid_head = self.murgatroid.head
 
         # Up
-        if self.board.is_safe(murgatroid_head.x, murgatroid_head.y - 1):
+        if self.board.is_safe(point.get_up_point()):
             directions.append(Direction.UP)
 
         # Down
-        if self.board.is_safe(murgatroid_head.x, murgatroid_head.y + 1):
+        if self.board.is_safe(point.get_down_point()):
             directions.append(Direction.DOWN)
 
         # Left
-        if self.board.is_safe(murgatroid_head.x - 1, murgatroid_head.y):
+        if self.board.is_safe(point.get_left_point()):
             directions.append(Direction.LEFT)
 
         # Right
-        if self.board.is_safe(murgatroid_head.x + 1, murgatroid_head.y):
+        if self.board.is_safe(point.get_right_point()):
             directions.append(Direction.RIGHT)
 
         return directions
