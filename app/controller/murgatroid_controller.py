@@ -49,25 +49,35 @@ class MurgatroidController(object):
         # Get safe directions from current point
         cur_safe_directions = self.get_safe_directions(murgatroid_head)
 
-        look_ahead_directions_map = {}
+        direction_weights = {}
         for direction in cur_safe_directions:
             if direction == Direction.UP:
                 num_safe_up_directions = \
                     len(self.get_safe_directions(murgatroid_head.get_up_point()))
-                look_ahead_directions_map[Direction.UP] = num_safe_up_directions
+                direction_weights[Direction.UP] = num_safe_up_directions
+
             elif direction == Direction.DOWN:
                 num_safe_down_directions = \
                     len(self.get_safe_directions(murgatroid_head.get_down_point()))
-                look_ahead_directions_map[Direction.DOWN] = num_safe_down_directions
+                direction_weights[Direction.DOWN] = num_safe_down_directions
+
             elif direction == Direction.LEFT:
                 num_safe_left_directions = \
                     len(self.get_safe_directions(murgatroid_head.get_left_point()))
-                look_ahead_directions_map[Direction.LEFT] = num_safe_left_directions
+                direction_weights[Direction.LEFT] = num_safe_left_directions
+
             elif direction == Direction.RIGHT:
                 num_safe_right_directions = \
                     len(self.get_safe_directions(murgatroid_head.get_right_point()))
-                look_ahead_directions_map[Direction.RIGHT] = num_safe_right_directions
-        print look_ahead_directions_map
+                direction_weights[Direction.RIGHT] = num_safe_right_directions
+
+        if not direction_weights and self.use_safe_bounds:
+            # Expand the bounds to the 'outer ring' if we don't have any possible
+            # directions after one pass
+            self.use_safe_bounds = False
+            direction_weights = self.get_possible_directions()
+
+        return direction_weights
 
     def get_safe_directions(self, point):
         """Returns an array of safe directions from the provided point
@@ -114,10 +124,10 @@ class MurgatroidController(object):
 
         # If outside of bounds, return False
         if any([
-            point.x > x_max,
-            point.x < x_min,
-            point.y > y_max,
-            point.y < y_min,
+            point.x >= x_max,
+            point.x <= x_min,
+            point.y >= y_max,
+            point.y <= y_min,
         ]):
             return False
 
