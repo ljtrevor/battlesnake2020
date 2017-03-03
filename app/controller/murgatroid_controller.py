@@ -1,3 +1,4 @@
+from model import board
 from model.direction import Direction
 from model.point import Point
 
@@ -13,6 +14,24 @@ class MurgatroidController(object):
         """
         self.board = board
         self.murgatroid = board.get_murgatroid()
+        self.use_safe_bounds = True
+
+    def get_adjacent_points(self, point, state=None):
+        adjacent_points = [
+            point.get_left_point(),
+            point.get_right_point(),
+            point.get_up_point(),
+            point.get_down_point(),
+        ]
+        if not state:
+            return adjacent_points
+
+        matching_points = [
+            adj
+            for adj in adjacent_points
+            if self.board.board[adj.x][adj.y] == state
+        ]
+        return matching_points
 
     def get_possible_directions(self):
         """Returns an array of safe directions from murgatroid's current location
@@ -74,6 +93,40 @@ class MurgatroidController(object):
             directions.append(Direction.RIGHT)
 
         return directions
+
+    def is_safe(self, point):
+        """Returns true if the point is safe. False Otherwise
+
+        Args:
+            point (Point)
+
+        Returns:
+            bool: True if safe cell. False otherwise.
+        """
+        x_min, x_max = self.safe_bound_ranges['x'] if self.use_safe_bounds \
+                else 0, self.width - 1
+        y_min, y_max = self.safe_bound_ranges['y'] if self.use_safe_bounds \
+                else 0, self.height - 1
+
+        # If outside of bounds, return False
+        if any([
+            point.x > x_max,
+            point.x < x_min,
+            point.y > y_max,
+            point.y < y_min,
+        ]):
+            return False
+
+        # If point is next to a snake head, there is a chance that snake will go
+        # to the same spot as us in this move.
+        # We therefore only want to consider this space safe if we are bigger than
+        # that snake. a snake head of a smaller snake consider it a safe space
+        adjacent_snake_heads = self.get_adjacent_points(point, board.SNAKE_HEAD)
+        for head in adjacent_snake_heads:
+            if self.board.get_snake(head).size > self.murgatroid.size:
+                return False
+
+        return self.board.board[point.x][point.y] in SAFE_STATES
 
     def seppuku(self):
         target = Point(self.murgatroid.coords[1].x, self.murgatroid.coords[1].y)

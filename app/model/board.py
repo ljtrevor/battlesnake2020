@@ -28,7 +28,6 @@ class Board(object):
         self.turn = turn
         self.snakes = snakes
         self.food_items = food_items
-        self.use_safe_bounds = True
         self.safe_bounds_ranges = {
             'x': [1, width - 2],
             'y': [1, height - 2]
@@ -112,40 +111,3 @@ class Board(object):
                     return snake
 
         return None
-
-    def is_safe(self, point):
-        """Returns true if the point is safe. False Otherwise
-
-        Args:
-            point (Point)
-
-        Returns:
-            bool: True if safe cell. False otherwise.
-        """
-        murgatroid = self.get_murgatroid()
-
-        # If outside of bounds, return False
-        if point.x < 0 or point.x > self.width - 1 or point.y < 0 or point.y > self.height - 1:
-            return False
-
-        # If using safe bounds and outside of safe bounds. Return false.
-        if self.use_safe_bounds:
-            x_min, x_max = self.safe_bounds_ranges['x']
-            y_min, y_max = self.safe_bounds_ranges['y']
-            if any([
-                point.x > x_max,
-                point.x < x_min,
-                point.y > y_max,
-                point.y < y_min,
-            ]):
-                return False
-
-        # If point is a snake head of a smaller snake consider it a safe space
-        for snake in self.snakes:
-            if snake.head == point and murgatroid.size > snake.size:
-                return True
-
-        return self.board[point.x][point.y] in SAFE_STATES
-
-    def set_use_safe_bounds(self, use_safe_bounds):
-        self.use_safe_bounds = use_safe_bounds

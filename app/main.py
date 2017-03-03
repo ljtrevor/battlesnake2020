@@ -140,7 +140,7 @@ def move():
 
     directions_map = murgatroid_controller.get_possible_directions()
     if not directions_map:
-        board.use_safe_bounds = False
+        murgatroid_controller.use_safe_bounds = False
         directions_map = murgatroid_controller.get_possible_directions()
         if not directions_map:
             # Commit suicide honorably so as not to give any victories to
