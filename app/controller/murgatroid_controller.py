@@ -199,4 +199,4 @@ class MurgatroidController(object):
         return direction
 
     def in_absolute_bounds(self, point):
-        return 0 <= point.x < self.board.width and  0 <= point.y < self.board.height
+        return 0 <= point.x < self.board.width and 0 <= point.y < self.board.height
