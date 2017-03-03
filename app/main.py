@@ -10,19 +10,6 @@ from model.board import Board
 from model.board import FOOD
 from controller.murgatroid_controller import MurgatroidController
 
-EMPTY = u'empty'
-FOOD = u'food'
-BODY = u'body'
-HEAD = u'head'
-MURGATROID = u'murgatroid'
-
-
-UP = u'up'
-RIGHT = u'right'
-DOWN = u'down'
-LEFT = u'left'
-
-
 @bottle.route('/static/<path:path>')
 def static(path):
     return bottle.static_file(path, root='static/')
