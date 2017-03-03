@@ -137,31 +137,12 @@ def move():
     data = bottle.request.json
     board = Board.from_json(data)
     murgatroid_controller = MurgatroidController(board)
-    murgatroid_controller.get_possible_directions()
 
-    width = board.width
-    height = board.height
-
-    bounds = {
-        "up": 1,
-        "down": height - 2,
-        "right": width - 2,
-        "left": 1,
-    }
-
-    murgatroid = [s for s in data['snakes'] if s['name'] == 'murgatroid'][0]
-
-    directions = get_possible_directions(murgatroid, board.board, bounds)
-    if not directions:
-        bounds = {
-            "up": 0,
-            "down": height - 1,
-            "right": width - 1,
-            "left": 0,
-        }
-
-        directions = get_possible_directions(murgatroid, board.board, bounds)
-        if not directions:
+    directions_map = murgatroid_controller.get_possible_directions()
+    if not directions_map:
+        board.use_safe_bounds = False
+        directions_map = murgatroid_controller.get_possible_directions()
+        if not directions_map:
             # Commit suicide honorably so as not to give any victories to
             # the other inferior snakes!
             return json.dumps({
@@ -169,7 +150,7 @@ def move():
                 'taunt': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
             })
 
-    direction = move_edge(murgatroid, bounds)
+    edge_direction = move_edge(murgatroid, bounds)
 
     food = [x for x, food in directions if food]
 
@@ -181,7 +162,7 @@ def move():
     else:
         directions = [x for x, _ in directions]
         return json.dumps({
-            'move': direction if direction in directions else random.choice(directions),
+            'move': edge_direction if edge_direction in directions else random.choice(directions),
             'taunt': 'MURGATROIIIIIID'
         })
 
