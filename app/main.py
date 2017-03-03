@@ -68,41 +68,6 @@ def look_ahead(head_x, head_y, board, bounds):
     return directions
 
 
-def get_adjacent_cells(murgatroid, board):
-    width = len(board)
-    height = len(board[0])
-
-    coords = murgatroid['coords']
-    head_x, head_y = coords[0][0], coords[0][1]
-
-    adjacents = []
-
-    if head_x + 1 < width:
-        adjacents.append({'x': head_x+1, 'y': head_y, 'direction': RIGHT})
-    if head_x - 1 >= 0:
-        adjacents.append({'x': head_x-1, 'y': head_y, 'direction': LEFT})
-    if head_y + 1 < height:
-        adjacents.append({'x': head_x, 'y': head_y+1, 'direction': DOWN})
-    if head_y - 1 >= 0:
-        adjacents.append({'x': head_x, 'y': head_y-1, 'direction': UP})
-
-    return adjacents
-
-
-def seppuku(murgatroid, board):
-    coords = murgatroid['coords']
-    head_x, head_y = coords[0][0], coords[0][1]
-    adjacents = get_adjacent_cells(murgatroid, board)
-
-    directions = [
-        adj['direction']
-        for adj in adjacents
-        if board[adj['x']][adj['y']]['snake'] == 'murgatroid'
-    ]
-
-    return random.choice(directions)
-
-
 def move_edge(murgatroid, bounds):
     coords = murgatroid['coords']
     head_x, head_y = coords[0][0], coords[0][1]
@@ -200,7 +165,7 @@ def move():
             # Commit suicide honorably so as not to give any victories to
             # the other inferior snakes!
             return json.dumps({
-                'move': seppuku(murgatroid, board.board),
+                'move': murgatroid_controller.seppuku(),
                 'taunt': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
             })
 

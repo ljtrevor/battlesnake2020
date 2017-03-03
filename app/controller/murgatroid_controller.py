@@ -37,6 +37,26 @@ class MurgatroidController(object):
 
         return directions
 
+    def seppuku(self):
+        target = Point(self.murgatroid.coords[1].x, self.murgatroid.coords[1].y)
 
+        delta = Point(
+            target.x - self.murgatroid.head.x,
+            target.y - self.murgatroid.head.y,
+        )
 
-
+        # Switch on the delta to figure out which direction Murgatroid needs
+        # to go to kill itself
+        if delta.x == 0 and delta.y == -1:
+            return Direction.UP
+        elif delta.x == 1 and delta.y == 0:
+            return Direction.RIGHT
+        elif delta.x == 0 and delta.y == 1:
+            return Direction.DOWN
+        elif delta.x == -1 and delta.y == 0:
+            return Direction.LEFT
+        else:
+            # We shouldn't ever be in a case where the second
+            # coord isn't next to the head, but better safe
+            # than sorry
+            return random.choice(Direction.directions)
