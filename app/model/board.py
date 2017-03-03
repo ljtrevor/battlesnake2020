@@ -10,6 +10,7 @@ SNAKE_HEAD = u'snake_head'
 SNAKE_BODY = u'snake_body'
 SAFE_STATES = [FOOD, EMPTY]
 
+
 class Board(object):
     def __init__(self, game_id, height, width, turn, snakes, food_items):
         """Creates a Board instance
@@ -27,6 +28,11 @@ class Board(object):
         self.turn = turn
         self.snakes = snakes
         self.food_items = food_items
+        self.use_safe_bounds = True
+        self.safe_bounds_ranges = {
+            'x': [1, width - 2],
+            'y': [1, height - 2]
+        }
 
         # Populate board
         self.board = [
@@ -118,9 +124,20 @@ class Board(object):
         """
         murgatroid = self.get_murgatroid()
 
+        # If using safe bounds and outside of safe bounds. Return false.
+        if self.use_safe_bounds:
+            x_range = self.safe_bounds_ranges['x']
+            y_range = self.safe_bounds_ranges['y']
+            if point.x not in range(x_range[0], x_range[1]) and point.y not in \
+                    range(y_range[0], y_range[1]):
+                return False
+
         # If point is a snake head of a smaller snake consider it a safe space
         for snake in self.snakes:
             if snake.head == point and murgatroid.size > snake.size:
                 return True
 
         return self.board[point.x][point.y] in SAFE_STATES
+
+    def set_use_safe_bounds(self, use_safe_bounds):
+        self.use_safe_bounds = use_safe_bounds
