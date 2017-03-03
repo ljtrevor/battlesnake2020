@@ -4,6 +4,10 @@ class Point(object):
         self.y = y
 
 
+    def __repr__(self):
+        return '<Point x=%s, y=%s>' % (self.x, self.y)
+
+
     def __eq__(self, point):
         """Returns true if the provided point is equal to self. False otherwise.
 
