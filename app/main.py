@@ -63,7 +63,8 @@ def move():
         if data['state'] == FOOD
     ]
 
-    food_directions = murgatroid_controller.get_food_directions()
+    if murgatroid.health_points < 50:
+        food_directions = murgatroid_controller.get_food_directions()
 
     if food_directions:
         return json.dumps({
