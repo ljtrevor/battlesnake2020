@@ -123,6 +123,16 @@ class MurgatroidController(object):
             Returns:
                 directions (Direction[])
         """
+        # Filter out unsafe moves for food.
+        # If the weight of any direction is 2 or less we are pretty likely
+        # to get trapped after going that direction, so take those moves off the
+        # table entirely right now.
+        directions_map = {
+            direction: data
+            for direction, data in directions_map.iteritems()
+            if data['weight'] > 2
+        }
+
         if self.murgatroid.health_points >= self.murgatroid.hunger_threshold:
             # Casually go for food if we are next to it and not particularly
             # hungry
