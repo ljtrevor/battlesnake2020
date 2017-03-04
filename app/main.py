@@ -55,27 +55,22 @@ def move():
     print directions_map
 
     edge_direction = murgatroid_controller.move_edge()
-
-    # Calculate food directions
-    food_directions = [
-        direction
-        for direction, data in directions_map.iteritems()
-        if data['state'] == FOOD
-    ]
-
-    if murgatroid.health_points < murgatroid.hunger_threshold:
-        food_directions = murgatroid_controller.get_food_directions()
-
     print edge_direction
 
+    food_directions = murgatroid_controller.get_food_directions(directions_map)
     if food_directions:
         return json.dumps({
-            'move': random.choice(food_directions),
+            'move': murgatroid_controller.get_safest_direction(food_directions),
             'taunt': 'Sssssssssssssaucy'
         })
     else:
+        if edge_direction in directions_map:
+            direction = edge_direction
+        else:
+            direction = murgatroid_controller.get_safest_direction(directions_map)
+
         return json.dumps({
-            'move': edge_direction if edge_direction in directions_map else random.choice(directions_map.keys()),
+            'move': direction,
             'taunt': 'MURGATROIIIIIID'
         })
 

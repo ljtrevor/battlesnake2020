@@ -22,6 +22,18 @@ class MurgatroidController(object):
             'y': [1, board.height - 2]
         }
 
+    def get_safest_direction(self, direction_map):
+        max_weight = 0
+        safest_direction = None
+
+        for direction, data in direction_map.iteritems():
+            direction_weight = data['weight']
+            if direction_weight > max_weight:
+                max_weight = direction_weight
+                safest_direction = direction
+
+        return safest_direction
+
     def get_adjacent_points(self, point, state=None):
         adjacent_points = [
             point.get_left_point(),
@@ -54,24 +66,24 @@ class MurgatroidController(object):
         direction_map = {}
         for direction in cur_safe_directions:
             if direction == Direction.UP:
-                num_safe_up_directions = \
-                    len(self.get_safe_directions(murgatroid_head.get_up_point()))
-                direction_map[Direction.UP] = {'weight': num_safe_up_directions}
+                safe_up_directions = self.get_safe_directions(murgatroid_head.get_up_point())
+                if safe_up_directions:
+                    direction_map[Direction.UP] = {'weight': len(safe_up_directions)}
 
             elif direction == Direction.DOWN:
-                num_safe_down_directions = \
-                    len(self.get_safe_directions(murgatroid_head.get_down_point()))
-                direction_map[Direction.DOWN] = {'weight': num_safe_down_directions}
+                safe_down_directions = self.get_safe_directions(murgatroid_head.get_down_point())
+                if safe_down_directions:
+                    direction_map[Direction.DOWN] = {'weight': len(safe_down_directions)}
 
             elif direction == Direction.LEFT:
-                num_safe_left_directions = \
-                    len(self.get_safe_directions(murgatroid_head.get_left_point()))
-                direction_map[Direction.LEFT] = {'weight': num_safe_left_directions}
+                safe_left_directions = self.get_safe_directions(murgatroid_head.get_left_point())
+                if safe_left_directions:
+                    direction_map[Direction.LEFT] = {'weight': len(safe_left_directions)}
 
             elif direction == Direction.RIGHT:
-                num_safe_right_directions = \
-                    len(self.get_safe_directions(murgatroid_head.get_right_point()))
-                direction_map[Direction.RIGHT] = {'weight': num_safe_right_directions}
+                safe_right_directions = self.get_safe_directions(murgatroid_head.get_right_point())
+                if safe_right_directions:
+                    direction_map[Direction.RIGHT] = {'weight': len(safe_right_directions)}
 
         for direction in direction_map.iterkeys():
             point = murgatroid_head.increment(direction)
@@ -85,12 +97,21 @@ class MurgatroidController(object):
 
         return direction_map
 
-    def get_food_directions(self):
+    def get_food_directions(self, directions_map):
         """Returns a safe directions from murgatroid to the closest food
 
             Returns:
                 directions (Direction[])
         """
+        if self.murgatroid.health_points >= self.murgatroid.hunger_threshold:
+            # Casually go for food if we are next to it and not particularly
+            # hungry
+            return {
+                direction: data
+                for direction, data in directions_map.iteritems()
+                if data['state'] == FOOD
+            }
+
         food_items = self.board.food_items
         murgatroid_head = self.murgatroid.head
 
@@ -107,21 +128,20 @@ class MurgatroidController(object):
                 if food_item_dict['distance'] < closest_food['distance']:
                     closest_food = food_item_dict
 
-        direction_map = self.get_possible_directions()
         food_item = closest_food['food']
 
-        direction_keys = direction_map.keys()
-        directions = []
-        if food_item.y < murgatroid_head.y and Direction.UP in direction_keys:
-            directions.append(Direction.UP)
-        elif food_item.y > murgatroid_head.y and Direction.DOWN in direction_keys:
-            directions.append(Direction.DOWN)
-        if food_item.x > murgatroid_head.x and Direction.RIGHT in direction_keys:
-            directions.append(Direction.RIGHT)
-        elif food_item.x < murgatroid_head.x and Direction.LEFT in direction_keys:
-            directions.append(Direction.LEFT)
+        food_map = {}
+        if food_item.y < murgatroid_head.y and Direction.UP in directions_map:
+            food_map[Direction.UP] = directions_map[Direction.UP]
+        elif food_item.y > murgatroid_head.y and Direction.DOWN in directions_map:
+            food_map[Direction.DOWN] = directions_map[Direction.DOWN]
 
-        return directions
+        if food_item.x > murgatroid_head.x and Direction.RIGHT in directions_map:
+            food_map[Direction.RIGHT] = directions_map[Direction.RIGHT]
+        elif food_item.x < murgatroid_head.x and Direction.LEFT in directions_map:
+            food_map[Direction.LEFT] = directions_map[Direction.LEFT]
+
+        return food_map
 
     def get_safe_directions(self, point):
         """Returns an array of safe directions from the provided point
