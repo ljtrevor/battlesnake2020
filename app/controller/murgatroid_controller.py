@@ -251,6 +251,10 @@ class MurgatroidController(object):
 
         return direction
 
+    def in_outer_ring(self, point):
+        return point.x == 0 or point.x == self.board.width - 1 or point.y == 0 \
+               or point.y == self.board.height - 1
+
     def in_absolute_bounds(self, point):
         return 0 <= point.x < self.board.width and 0 <= point.y < self.board.height
 
