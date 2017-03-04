@@ -56,7 +56,7 @@ class MurgatroidController(object):
         def calculate_single_move_weight(point, direction, direction_map):
             safe_directions = self.get_safe_directions(point)
             if safe_directions:
-                direction_map[direction]['weight'] += len(safe_up_directions)
+                direction_map[direction]['weight'] += len(safe_directions)
 
             return direction_map
 
