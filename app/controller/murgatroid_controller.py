@@ -62,12 +62,12 @@ class MurgatroidController(object):
 
         murgatroid_head = self.murgatroid.head
         adjacent_point = murgatroid_head.increment(direction)
-        direction_map[direction] = calculate_single_move_weight(
+        direction_map = calculate_single_move_weight(
             adjacent_point,
             direction,
             direction_map,
         )
-        direction_map[direction] = calculate_single_move_weight(
+        direction_map = calculate_single_move_weight(
             adjacent_point.increment(direction),
             direction,
             direction_map,
