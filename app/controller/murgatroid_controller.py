@@ -16,7 +16,7 @@ class MurgatroidController(object):
         """
         self.board = board
         self.murgatroid = board.get_murgatroid()
-        self.use_safe_bounds = True
+        self.use_safe_bounds = self.murgatroid.health_points > self.murgatroid.hunger_threshold
         self.safe_bounds_ranges = {
             'x': [1, board.width - 2],
             'y': [1, board.height - 2]

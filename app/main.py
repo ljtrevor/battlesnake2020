@@ -63,7 +63,7 @@ def move():
         if data['state'] == FOOD
     ]
 
-    if murgatroid.health_points < 50:
+    if murgatroid.health_points < murgatroid.hunger_threshold:
         food_directions = murgatroid_controller.get_food_directions()
 
     print edge_direction
