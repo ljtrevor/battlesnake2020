@@ -86,6 +86,9 @@ def static(path):
 
 @bottle.post('/start')
 def start():
+    global counter
+    counter = 0
+
     data = bottle.request.json
     game_id = data['game_id']
     board_width = data['width']

@@ -55,7 +55,7 @@ class MurgatroidController(object):
     def calculate_total_move_weight(self, direction, direction_map):
         def calculate_single_move_weight(point, direction, direction_map):
             safe_directions = self.get_safe_directions(point)
-            if safe_directions:
+            if self.is_safe(point) and safe_directions:
                 direction_map[direction]['weight'] += len(safe_directions)
 
             return direction_map
@@ -71,11 +71,12 @@ class MurgatroidController(object):
             # No possible moves to make at this point. Call it 0 and move on
             return direction_map
 
-        direction_map = calculate_single_move_weight(
-            adjacent_point.increment(direction),
-            direction,
-            direction_map,
-        )
+        for splayed_dir in [Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT]:
+            direction_map = calculate_single_move_weight(
+                adjacent_point.increment(splayed_dir),
+                direction,
+                direction_map,
+            )
         return direction_map
 
     def get_possible_directions(self):
@@ -109,7 +110,7 @@ class MurgatroidController(object):
                 if self.in_absolute_bounds(point):
                     direction_map[direction]['state'] = self.board.board[point.x][point.y]
 
-        if self.use_safe_bounds and not direction_map:
+        if self.use_safe_bounds and not any([data['weight'] > 1 for data in direction_map.itervalues()]):
             # Expand the bounds to the 'outer ring' if we don't have any possible
             # directions after one pass
             self.use_safe_bounds = False
