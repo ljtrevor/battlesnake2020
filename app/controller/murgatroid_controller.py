@@ -1,6 +1,7 @@
 from model import board
 from model.direction import Direction
 from model.point import Point
+from model.board import FOOD
 
 import random
 import sys
@@ -166,10 +167,10 @@ class MurgatroidController(object):
 
         # If outside of bounds, return False
         if any([
-            point.x >= x_max,
-            point.x <= x_min,
-            point.y >= y_max,
-            point.y <= y_min,
+            point.x > x_max,
+            point.x < x_min,
+            point.y > y_max,
+            point.y < y_min,
         ]):
             return False
 

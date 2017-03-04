@@ -52,6 +52,8 @@ def move():
             'taunt': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
         })
 
+    print directions_map
+
     edge_direction = murgatroid_controller.move_edge()
 
     # Calculate food directions
@@ -62,7 +64,6 @@ def move():
     ]
 
     food_directions = murgatroid_controller.get_food_directions()
-    print food_directions
 
     if food_directions:
         return json.dumps({
