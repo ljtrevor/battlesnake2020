@@ -67,6 +67,10 @@ class MurgatroidController(object):
             direction,
             direction_map,
         )
+        if direction_map[direction]['weight'] == 0:
+            # No possible moves to make at this point. Call it 0 and move on
+            return direction_map
+
         direction_map = calculate_single_move_weight(
             adjacent_point.increment(direction),
             direction,
