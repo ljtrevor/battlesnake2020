@@ -40,6 +40,7 @@ def start():
 def move():
     data = bottle.request.json
     board = Board.from_json(data)
+    murgatroid = board.get_murgatroid()
     murgatroid_controller = MurgatroidController(board)
 
     directions_map = murgatroid_controller.get_possible_directions()
@@ -53,12 +54,15 @@ def move():
 
     edge_direction = murgatroid_controller.move_edge()
 
-    # WIP
+    # Calculate food directions
     food_directions = [
         direction
         for direction, data in directions_map.iteritems()
         if data['state'] == FOOD
     ]
+
+    food_directions = murgatroid_controller.get_food_directions()
+    print food_directions
 
     if food_directions:
         return json.dumps({

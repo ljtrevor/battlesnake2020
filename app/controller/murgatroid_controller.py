@@ -4,6 +4,7 @@ from model.point import Point
 
 import random
 import sys
+import math
 
 
 class MurgatroidController(object):
@@ -81,8 +82,45 @@ class MurgatroidController(object):
             self.use_safe_bounds = False
             direction_map = self.get_possible_directions()
 
-        print direction_map
         return direction_map
+
+    def get_food_directions(self):
+        """Returns a safe directions from murgatroid to the closest food
+
+            Returns:
+                directions (Direction[])
+        """
+        food_items = self.board.food_items
+        murgatroid_head = self.murgatroid.head
+
+        closest_food = None
+        for food_item in food_items:
+            food_item_dict = {
+                'food': food_item,
+                'distance': self.absolute_distance(murgatroid_head, food_item)
+            }
+
+            if closest_food is None:
+                closest_food = food_item_dict
+            else:
+                if food_item_dict['distance'] < closest_food['distance']:
+                    closest_food = food_item_dict
+
+        direction_map = self.get_possible_directions()
+        food_item = closest_food['food']
+
+        direction_keys = direction_map.keys()
+        directions = []
+        if food_item.y < murgatroid_head.y and Direction.UP in direction_keys:
+            directions.append(Direction.UP)
+        elif food_item.y > murgatroid_head.y and Direction.DOWN in direction_keys:
+            directions.append(Direction.DOWN)
+        if food_item.x > murgatroid_head.x and Direction.RIGHT in direction_keys:
+            directions.append(Direction.RIGHT)
+        elif food_item.x < murgatroid_head.x and Direction.LEFT in direction_keys:
+            directions.append(Direction.LEFT)
+
+        return directions
 
     def get_safe_directions(self, point):
         """Returns an array of safe directions from the provided point
@@ -214,3 +252,10 @@ class MurgatroidController(object):
 
     def in_absolute_bounds(self, point):
         return 0 <= point.x < self.board.width and 0 <= point.y < self.board.height
+
+    @staticmethod
+    def absolute_distance(point1, point2):
+        """
+        Calculate the distance between two points using the distance formula.
+        """
+        return math.sqrt( ( point1.x - point2.x )**2 + ( point1.y - point2.y )**2 )

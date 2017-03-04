@@ -42,3 +42,5 @@ class Snake(object):
                 Point: Snake head Point
         """
         return self.coords[0]
+
+
