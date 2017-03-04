@@ -10,6 +10,75 @@ from model.board import Board
 from model.board import FOOD
 from controller.murgatroid_controller import MurgatroidController
 
+taunt_list = """
+Well, you can tell by the way I use my walk
+I'm a woman's man: no time to talk
+Music loud and women warm, I've been kicked around
+Since I was born
+And now it's all right, it's okay
+And you may look the other way
+We can try to understand
+The New York Times' effect on man
+Whether you're a brother or whether you're a mother
+You're stayin' alive, stayin' alive
+Feel the city breakin' and everybody shakin'
+And we're stayin' alive, stayin' alive
+Ah, ha, ha, ha, stayin' alive, stayin' alive
+Ah, ha, ha, ha, stayin' alive
+Well now, I get low and I get high
+And if I can't get either, I really try
+Got the wings of heaven on my shoes
+I'm a dancin' man and I just can't lose
+You know it's all right, it's okay
+I'll live to see another day
+We can try to understand
+The New York Times' effect on man
+Whether you're a brother or whether you're a mother
+You're stayin' alive, stayin' alive
+Feel the city breakin' and everybody shakin'
+And we're stayin' alive, stayin' alive
+Ah, ha, ha, ha, stayin' alive, stayin' alive
+Ah, ha, ha, ha, stayin' alive
+Life goin' nowhere, somebody help me
+Somebody help me, yeah
+Life goin' nowhere, somebody help me
+Somebody help me, yeah, I'm stayin' alive
+Well, you can tell by the way I use my walk
+I'm a woman's man: no time to talk
+Music loud and women warm
+I've been kicked around since I was born
+And now it's all right, it's okay
+And you may look the other way
+We can try to understand
+The New York Times' effect on man
+Whether you're a brother or whether you're a mother
+You're stayin' alive, stayin' alive
+Feel the city breakin' and everybody shakin'
+And we're stayin' alive, stayin' alive
+Ah, ha, ha, ha, stayin' alive, stayin' alive
+Ah, ha, ha, ha, stayin' alive
+Life goin' nowhere, somebody help me
+Somebody help me, yeah
+Life goin' nowhere, somebody help me, yeah
+I'm stayin' alive
+Life goin' nowhere, somebody help me
+Somebody help me, yeah
+Life goin' nowhere, somebody help me, yeah
+I'm stayin' alive
+Life goin' nowhere, somebody help me
+Somebody help me, yeah
+Life goin' nowhere, somebody help me, yeah
+I'm stayin' alive
+Life goin' nowhere, somebody help me
+Somebody help me, yeah
+Life goin' nowhere, somebody help me, yeah
+I'm stayin' alive
+""".split('\n')
+
+
+counter = 0
+
+
 @bottle.route('/static/<path:path>')
 def static(path):
     return bottle.static_file(path, root='static/')
@@ -28,13 +97,19 @@ def start():
     )
 
     # TODO: Do things with data
-
     return {
-        'color': '#00FF00',
-        'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
+        'color': '#e52a01',
+        'taunt': 'Well, you can tell by the way I use my walk',
         'head_url': head_url,
         'name': 'murgatroid'
     }
+
+
+def get_taunt():
+    global counter
+    counter += 1
+    return taunt_list[counter/4 % len(taunt_list)]
+
 
 @bottle.post('/move')
 def move():
@@ -57,11 +132,13 @@ def move():
     edge_direction = murgatroid_controller.move_edge()
     print edge_direction
 
+    taunt = get_taunt()
+
     food_directions = murgatroid_controller.get_food_directions(directions_map)
     if food_directions:
         return json.dumps({
             'move': murgatroid_controller.get_safest_direction(food_directions),
-            'taunt': 'Sssssssssssssaucy'
+            'taunt': taunt,
         })
     else:
         if edge_direction in directions_map:
@@ -71,7 +148,7 @@ def move():
 
         return json.dumps({
             'move': direction,
-            'taunt': 'MURGATROIIIIIID'
+            'taunt': taunt,
         })
 
 
