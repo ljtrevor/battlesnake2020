@@ -96,12 +96,13 @@ class MurgatroidController(object):
         # the snake's head in every direction.
         for direction in self.get_safe_directions(murgatroid_head):
             direction_map = self.calculate_total_move_weight(direction, direction_map)
+
+        for direction in direction_map.keys():
             if direction_map[direction]['weight'] == 0:
                 del direction_map[direction]
-
-        for direction in direction_map.iterkeys():
-            point = murgatroid_head.increment(direction)
-            direction_map[direction]['state'] = self.board.board[point.x][point.y]
+            else:
+                point = murgatroid_head.increment(direction)
+                direction_map[direction]['state'] = self.board.board[point.x][point.y]
 
         if self.use_safe_bounds and not direction_map:
             # Expand the bounds to the 'outer ring' if we don't have any possible
