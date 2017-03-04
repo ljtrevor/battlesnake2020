@@ -1,7 +1,7 @@
-from model import board
-from model.direction import Direction
-from model.point import Point
-from model.board import FOOD
+from ..model.board import FOOD
+from ..model.board import SNAKE_HEAD
+from ..model.direction import Direction
+from ..model.point import Point
 
 import random
 import sys
@@ -198,7 +198,7 @@ class MurgatroidController(object):
         # to the same spot as us in this move.
         # We therefore only want to consider this space safe if we are bigger than
         # that snake. a snake head of a smaller snake consider it a safe space
-        adjacent_snake_heads = self.get_adjacent_points(point, board.SNAKE_HEAD)
+        adjacent_snake_heads = self.get_adjacent_points(point, SNAKE_HEAD)
         for head in adjacent_snake_heads:
             if self.board.get_snake(head).size > self.murgatroid.size:
                 return False
