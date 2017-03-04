@@ -1,5 +1,6 @@
 from ..model.board import FOOD
 from ..model.board import SNAKE_HEAD
+from ..model.board import SAFE_STATES
 from ..model.direction import Direction
 from ..model.point import Point
 
@@ -203,7 +204,7 @@ class MurgatroidController(object):
             if self.board.get_snake(head).size > self.murgatroid.size:
                 return False
 
-        return self.board.board[point.x][point.y] in board.SAFE_STATES
+        return self.board.board[point.x][point.y] in SAFE_STATES
 
     def seppuku(self):
         target = Point(self.murgatroid.coords[1].x, self.murgatroid.coords[1].y)
