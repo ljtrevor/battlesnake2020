@@ -89,10 +89,10 @@ class MurgatroidController(object):
 
         # Initialize our direction map with weights
         direction_map = {
-            Direction.UP: {'weight': 0},
-            Direction.RIGHT: {'weight': 0},
-            Direction.DOWN: {'weight': 0},
-            Direction.LEFT: {'weight': 0},
+            Direction.UP: {'weight': 0, 'state': None},
+            Direction.RIGHT: {'weight': 0, 'state': None},
+            Direction.DOWN: {'weight': 0, 'state': None},
+            Direction.LEFT: {'weight': 0, 'state': None},
         }
 
         # Calculate the weights of each move from our current position.
@@ -106,7 +106,8 @@ class MurgatroidController(object):
                 del direction_map[direction]
             else:
                 point = murgatroid_head.increment(direction)
-                direction_map[direction]['state'] = self.board.board[point.x][point.y]
+                if self.in_absolute_bounds(point):
+                    direction_map[direction]['state'] = self.board.board[point.x][point.y]
 
         if self.use_safe_bounds and not direction_map:
             # Expand the bounds to the 'outer ring' if we don't have any possible
