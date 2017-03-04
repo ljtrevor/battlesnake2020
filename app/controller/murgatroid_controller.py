@@ -52,6 +52,28 @@ class MurgatroidController(object):
         ]
         return matching_points
 
+    def calculate_total_move_weight(self, direction, direction_map):
+        def calculate_single_move_weight(point, direction, direction_map):
+            safe_directions = self.get_safe_directions(point)
+            if safe_directions:
+                direction_map[direction]['weight'] += len(safe_up_directions)
+
+            return direction_map
+
+        murgatroid_head = self.murgatroid.head
+        adjacent_point = murgatroid_head.increment(direction)
+        direction_map[direction] = calculate_single_move_weight(
+            adjacent_point,
+            direction,
+            direction_map[direction],
+        )
+        direction_map[direction] = calculate_single_move_weight(
+            adjacent_point.increment(direction),
+            direction,
+            direction_map[direction],
+        )
+        return direction_map
+
     def get_possible_directions(self):
         """Returns an array of safe directions from murgatroid's current location
 
@@ -61,30 +83,21 @@ class MurgatroidController(object):
         """
         murgatroid_head = self.murgatroid.head
 
-        # Get safe directions from current point
-        cur_safe_directions = self.get_safe_directions(murgatroid_head)
+        # Initialize our direction map with weights
+        direction_map = {
+            Direction.UP: {'weight': 0},
+            Direction.RIGHT: {'weight': 0},
+            Direction.DOWN: {'weight': 0},
+            Direction.LEFT: {'weight': 0},
+        }
 
-        direction_map = {}
-        for direction in cur_safe_directions:
-            if direction == Direction.UP:
-                safe_up_directions = self.get_safe_directions(murgatroid_head.get_up_point())
-                if safe_up_directions:
-                    direction_map[Direction.UP] = {'weight': len(safe_up_directions)}
-
-            elif direction == Direction.DOWN:
-                safe_down_directions = self.get_safe_directions(murgatroid_head.get_down_point())
-                if safe_down_directions:
-                    direction_map[Direction.DOWN] = {'weight': len(safe_down_directions)}
-
-            elif direction == Direction.LEFT:
-                safe_left_directions = self.get_safe_directions(murgatroid_head.get_left_point())
-                if safe_left_directions:
-                    direction_map[Direction.LEFT] = {'weight': len(safe_left_directions)}
-
-            elif direction == Direction.RIGHT:
-                safe_right_directions = self.get_safe_directions(murgatroid_head.get_right_point())
-                if safe_right_directions:
-                    direction_map[Direction.RIGHT] = {'weight': len(safe_right_directions)}
+        # Calculate the weights of each move from our current position.
+        # This takes into account the surrounding points of the points two away from
+        # the snake's head in every direction.
+        for direction in self.get_safe_directions(murgatroid_head):
+            direction_map = self.calculate_total_move_weight(direction, direction_map)
+            if direction_map[direction]['weight'] == 0:
+                del direction_map[direction]
 
         for direction in direction_map.iterkeys():
             point = murgatroid_head.increment(direction)
