@@ -77,7 +77,7 @@ class MurgatroidController(object):
             point = murgatroid_head.increment(direction)
             direction_map[direction]['state'] = self.board.board[point.x][point.y]
 
-        if not direction_map and self.use_safe_bounds:
+        if self.use_safe_bounds and not direction_map:
             # Expand the bounds to the 'outer ring' if we don't have any possible
             # directions after one pass
             self.use_safe_bounds = False
@@ -160,17 +160,17 @@ class MurgatroidController(object):
         Returns:
             bool: True if safe cell. False otherwise.
         """
-        x_min, x_max = self.safe_bounds_ranges['x'] if self.use_safe_bounds \
-                else 0, self.board.width - 1
-        y_min, y_max = self.safe_bounds_ranges['y'] if self.use_safe_bounds \
-                else 0, self.board.height - 1
+        x_min = self.safe_bounds_ranges['x'][0] if self.use_safe_bounds else 0
+        x_max = self.safe_bounds_ranges['x'][1] if self.use_safe_bounds else self.board.width - 1
+        y_min = self.safe_bounds_ranges['y'][0] if self.use_safe_bounds else 0
+        y_max = self.safe_bounds_ranges['y'][1] if self.use_safe_bounds else self.board.height - 1
 
         # If outside of bounds, return False
         if any([
-            point.x > x_max,
-            point.x < x_min,
-            point.y > y_max,
-            point.y < y_min,
+            point.x >= x_max,
+            point.x <= x_min,
+            point.y >= y_max,
+            point.y <= y_min,
         ]):
             return False
 
