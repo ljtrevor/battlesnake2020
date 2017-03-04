@@ -167,10 +167,10 @@ class MurgatroidController(object):
 
         # If outside of bounds, return False
         if any([
-            point.x >= x_max,
-            point.x <= x_min,
-            point.y >= y_max,
-            point.y <= y_min,
+            point.x > x_max,
+            point.x < x_min,
+            point.y > y_max,
+            point.y < y_min,
         ]):
             return False
 

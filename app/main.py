@@ -66,6 +66,8 @@ def move():
     if murgatroid.health_points < 50:
         food_directions = murgatroid_controller.get_food_directions()
 
+    print edge_direction
+
     if food_directions:
         return json.dumps({
             'move': random.choice(food_directions),
