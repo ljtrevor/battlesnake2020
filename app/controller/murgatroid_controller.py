@@ -231,7 +231,7 @@ class MurgatroidController(object):
         # that snake. a snake head of a smaller snake consider it a safe space
         adjacent_snake_heads = self.get_adjacent_points(point, SNAKE_HEAD)
         for head in adjacent_snake_heads:
-            if self.board.get_snake(head).size > self.murgatroid.size:
+            if self.board.get_snake(head).size >= self.murgatroid.size:
                 return False
 
         return self.board.board[point.x][point.y] in SAFE_STATES
