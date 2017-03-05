@@ -111,7 +111,7 @@ def start():
 def get_taunt():
     global counter
     counter += 1
-    return taunt_list[counter/4 % len(taunt_list)]
+    return taunt_list[(counter/16 % len(taunt_list))]
 
 
 @bottle.post('/move')
