@@ -66,15 +66,15 @@ class Board(object):
             Board: Board instance
         """
         snakes = []
-        for snake in json['snakes']:
+        for snake in json['snakes']['data']:
             snakes.append(Snake.from_json(snake))
 
         food_items = []
-        for food in json['food']:
-            food_items.append(Point(food[0], food[1]))
+        for food in json['food']['data']:
+            food_items.append(Point(food['x'], food['y']))
 
         return Board(
-            json['game_id'],
+            json['id'],
             json['height'],
             json['width'],
             json['turn'],
