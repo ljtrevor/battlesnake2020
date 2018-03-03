@@ -104,7 +104,6 @@ def start():
         'color': '#e52a01',
         'taunt': 'Well, you can tell by the way I use my walk',
         'head_url': head_url,
-        'name': 'murgatroid'
     }
 
 
@@ -118,7 +117,6 @@ def get_taunt():
 def move():
     data = bottle.request.json
     board = Board.from_json(data)
-    murgatroid = board.get_murgatroid()
     murgatroid_controller = MurgatroidController(board)
 
     directions_map = murgatroid_controller.get_possible_directions()

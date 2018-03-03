@@ -33,7 +33,7 @@ class Snake(object):
             coords,
             json['health'],
             json['id'],
-            json['name'],
+            "",
             json['taunt']
         )
 

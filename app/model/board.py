@@ -1,5 +1,3 @@
-import pprint
-
 from snake import Snake
 from point import Point
 
@@ -12,7 +10,7 @@ SAFE_STATES = [FOOD, EMPTY]
 
 
 class Board(object):
-    def __init__(self, game_id, height, width, turn, snakes, food_items):
+    def __init__(self, game_id, height, width, turn, snakes, food_items, you):
         """Creates a Board instance
             Args:
                 game_id (int)
@@ -21,6 +19,7 @@ class Board(object):
                 turn (int)
                 snakes (Snake[])
                 food_items (Food[])
+                you (Snake)
         """
         self.game_id = game_id
         self.height = height
@@ -28,6 +27,7 @@ class Board(object):
         self.turn = turn
         self.snakes = snakes
         self.food_items = food_items
+        self.you = you
 
         # Populate board
         self.board = [
@@ -43,17 +43,18 @@ class Board(object):
         for snake in snakes:
             coords = snake.coords
 
-            if snake.name == MURGATROID:
-                for coord in coords:
-                    self.board[coord.x][coord.y] = MURGATROID
-            else:
-                # Set the coordinates of the head
-                head = coords[0]
-                self.board[head.x][head.y] = SNAKE_HEAD
+            # Set the coordinates of the head
+            head = coords[0]
+            self.board[head.x][head.y] = SNAKE_HEAD
 
             # Set the coordinates of the body
             for coord in coords[1:]:
                 self.board[coord.x][coord.y] = SNAKE_BODY
+
+        murgatroid_coords = self.you.coords
+        for coord in murgatroid_coords:
+            self.board[coord.x][coord.y] = MURGATROID
+
 
     @staticmethod
     def from_json(json):
@@ -73,13 +74,16 @@ class Board(object):
         for food in json['food']['data']:
             food_items.append(Point(food['x'], food['y']))
 
+        you = Snake.from_json(json['you'])
+
         return Board(
             json['id'],
             json['height'],
             json['width'],
             json['turn'],
             snakes,
-            food_items
+            food_items,
+            you
         )
 
     def get_murgatroid(self):
@@ -89,11 +93,8 @@ class Board(object):
         Returns:
             Snake|None: Returns murgatroid if can be found. None otherwise.
         """
-        for snake in self.snakes:
-            if snake.name == MURGATROID:
-                return snake
-
-        return None
+        print self.you.coords
+        return self.you
 
     def get_snake(self, point):
         """Returns a Snake at a given point if exists. None otherwise.
