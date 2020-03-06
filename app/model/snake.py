@@ -3,7 +3,7 @@ from point import Point
 
 class Snake(object):
     def __init__(self, coords, health_points, snake_id, name, taunt,
-            hunger_threshold=60):
+            hunger_threshold=40):
         """Creates a Snake instance
             Args:
                 coords (Point[]) Array of Point objects'
