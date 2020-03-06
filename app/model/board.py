@@ -77,7 +77,7 @@ class Board(object):
         you = Snake.from_json(json['you'])
 
         return Board(
-            json['id'],
+            json['game']['id'],
             json['height'],
             json['width'],
             json['turn'],

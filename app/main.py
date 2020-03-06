@@ -78,6 +78,9 @@ I'm stayin' alive
 
 counter = 0
 
+@bottle.route("/")
+def index():
+    return "Your Battlesnake is alive!"
 
 @bottle.route('/static/<path:path>')
 def static(path):
