@@ -80,7 +80,7 @@ class Board(object):
             json['game']['id'],
             json['board']['height'],
             json['board']['width'],
-            json['board']['turn'],
+            json['turn'],
             snakes,
             food_items,
             you
