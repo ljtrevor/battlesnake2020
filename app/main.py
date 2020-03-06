@@ -102,7 +102,7 @@ def start():
     # TODO: Do things with data
     return {
         'color': '#e52a01',
-        'taunt': 'Well, you can tell by the way I use my walk',
+        'shout': 'Well, you can tell by the way I use my walk',
         'head_url': head_url,
     }
 
@@ -125,7 +125,7 @@ def move():
         # the other inferior snakes!
         return json.dumps({
             'move': murgatroid_controller.seppuku(),
-            'taunt': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
+            'shout': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
         })
 
     print directions_map
@@ -139,7 +139,7 @@ def move():
     if food_directions:
         return json.dumps({
             'move': murgatroid_controller.get_safest_direction(food_directions),
-            'taunt': taunt,
+            'shout': taunt,
         })
     else:
         if edge_direction in directions_map:
@@ -149,7 +149,7 @@ def move():
 
         return json.dumps({
             'move': direction,
-            'taunt': taunt,
+            'shout': taunt,
         })
 
 

@@ -27,14 +27,14 @@ class Snake(object):
     @staticmethod
     def from_json(json):
         coords = []
-        for coord in json['body']['data']:
+        for coord in json['body']:
             coords.append(Point(coord['x'], coord['y']))
         return Snake(
             coords,
             json['health'],
             json['id'],
             "",
-            json['taunt']
+            json['shout']
         )
 
     @property

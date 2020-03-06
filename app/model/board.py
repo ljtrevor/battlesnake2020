@@ -67,11 +67,11 @@ class Board(object):
             Board: Board instance
         """
         snakes = []
-        for snake in json['snakes']['data']:
+        for snake in json['board']['snakes']:
             snakes.append(Snake.from_json(snake))
 
         food_items = []
-        for food in json['food']['data']:
+        for food in json['board']['food']:
             food_items.append(Point(food['x'], food['y']))
 
         you = Snake.from_json(json['you'])
