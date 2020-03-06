@@ -93,7 +93,7 @@ class Board(object):
         Returns:
             Snake|None: Returns murgatroid if can be found. None otherwise.
         """
-        print self.you.coords
+
         return self.you
 
     def get_snake(self, point):

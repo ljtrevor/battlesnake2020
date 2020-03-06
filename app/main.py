@@ -128,7 +128,6 @@ def move():
             'shout': 'You will always remember this as the day you almost caught Captain Jack Sparrow!'
         })
 
-    print directions_map
 
     edge_direction = murgatroid_controller.move_edge()
     print edge_direction
