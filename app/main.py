@@ -130,7 +130,7 @@ def move():
 
 
     edge_direction = murgatroid_controller.move_edge()
-    print edge_direction
+
 
     taunt = get_taunt()
 
