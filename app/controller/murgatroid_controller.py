@@ -19,8 +19,8 @@ class MurgatroidController(object):
         self.murgatroid = board.get_murgatroid()
         self.use_safe_bounds = self.murgatroid.health_points > self.murgatroid.hunger_threshold
         self.safe_bounds_ranges = {
-            'x': [1, board.width - 2],
-            'y': [1, board.height - 2]
+            'x': [1, board.width - 3],
+            'y': [1, board.height - 3]
         }
 
     def get_safest_direction(self, direction_map):
