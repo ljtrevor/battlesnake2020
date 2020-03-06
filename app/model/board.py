@@ -78,9 +78,9 @@ class Board(object):
 
         return Board(
             json['game']['id'],
-            json['height'],
-            json['width'],
-            json['turn'],
+            json['board']['height'],
+            json['board']['width'],
+            json['board']['turn'],
             snakes,
             food_items,
             you
